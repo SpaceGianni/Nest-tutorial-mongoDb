@@ -1,20 +1,19 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CoffeeController } from './coffee/coffee.controller';
-import { CoffeeService } from './coffee/coffee.service';
 import { CoffeeModule } from './coffee/coffee.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [CoffeeModule, TypeOrmModule.forRoot({
+  imports: [ConfigModule.forRoot(),CoffeeModule, TypeOrmModule.forRoot({
     type: 'postgres', // type of our database
-      host: 'localhost', // database host
-      port: 5434, // database host
-      username: 'postgres', // username
-      password: 'postgres', // user password
-      database: 'postgres', // name of our database,
+      host: process.env.DATABASE_HOST,
+      port: +process.env.DATABASE_PORT,
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       autoLoadEntities: true, // models will be loaded automatically 
       synchronize: true, // your entities will be synced with the database(recommended: disable in prod)
   }), CoffeeRatingModule],
